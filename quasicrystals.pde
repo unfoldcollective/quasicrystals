@@ -95,25 +95,16 @@ void addPoint()
   }
   PVector point = new PVector(cursorX, cursorY).add(getDisplacementNoise(noiseScale));
   points.add(point);
-  println(getDisplacementNoise(noiseScale).x);
 }
 void moveTargetX(float n) {
   float maxScaleX = 10;
   float ratioX = n / maxScaleX;
   targetX = ratioX * width;
-  
-  println(targetX);
-  
-  println("***");
 }
 void moveTargetY(float n) {
   float maxScaleY = 3;
   float ratioY = n / maxScaleY;
   targetY = ratioY * height;
-  
-  println(targetY);
-  
-  println("***");
 }
 void keyPressed() {
   switch(key) {
