@@ -16,23 +16,28 @@ color[] palette = {#FFFFFF, #FFFFFF, #FFFFFF, #FFFFFF};
 color bgColor = 0;
 ArrayList<PVector> points = new ArrayList();
 
+int NUM_TOUCH_POINTS_X = 5;
+int NUM_TOUCH_POINTS_Y = 2;
 float targetX, targetY, cursorX, cursorY;
 float easing = 0.02;
 float dThreshold = 5;
 float noiseScale = 1;
 float noiseMultiplier = 10;
+Boolean shouldDraw = false;
 
 void setup()
 {
-  fullScreen();
-  //size(800, 600);
+  //fullScreen();
+  size(450, 850);
   background(0);
   fill(bgColor, 31);
   
+  noCursor();
+  
   targetX = width * 0.5;
-  targetY = height * 0.5;
+  targetY = height * 0.1;
   cursorX = width * 0.5;
-  cursorY = height * 0.5;
+  cursorY = height * 0.9;
 }
 void draw()
 {
@@ -94,23 +99,76 @@ void addPoint()
     points.remove(0);
   }
   PVector point = new PVector(cursorX, cursorY).add(getDisplacementNoise(noiseScale));
-  points.add(point);
+  if(shouldDraw){
+    points.add(point); 
+  }
+}
+void addPointAt(float x, float y)
+{
+  if( ! ( points.size() < maxPoints) ) {
+    points.remove(0);
+  }
+  PVector point = new PVector(x, y);
+  if(shouldDraw){
+    points.add(point); 
+  }
 }
 void moveTargetX(float n) {
-  float maxScaleX = 10;
+  float maxScaleX = NUM_TOUCH_POINTS_X + 1;
   float ratioX = n / maxScaleX;
   targetX = ratioX * width;
 }
 void moveTargetY(float n) {
-  float maxScaleY = 3;
+  float maxScaleY = NUM_TOUCH_POINTS_Y + 1;
   float ratioY = n / maxScaleY;
   targetY = ratioY * height;
+}
+void moveCursorX(float n) {
+  float maxScaleX = NUM_TOUCH_POINTS_X + 1;
+  float ratioX = n / maxScaleX;
+  cursorX = ratioX * width;
+}
+void moveCursorRatioX(float ratio) {
+  cursorX = ratio * width;
+}
+void moveCursorY(float n) {
+  float maxScaleY = NUM_TOUCH_POINTS_Y + 1;
+  float ratioY = n / maxScaleY;
+  cursorY = ratioY * height;
+}
+void moveCursorRatioY(float ratio) {
+  cursorY = ratio * height;
+}
+void dropCursor(float n) {
+  shouldDraw = true;
+  moveCursorRatioX(n/(NUM_TOUCH_POINTS_X+1));
+  moveCursorRatioY(0.9);
+  moveTargetX(n);
+  // move target with noise
+  PVector noise = getDisplacementNoise(10);
+  targetX += noise.x;
+  targetY += noise.y;
+  drawPointsAroundCursor(8, 20);
+}
+void drawPointsAroundCursor(int numPoints, float rad) {
+  ellipseMode(RADIUS);
+  ellipse(cursorX, cursorY, rad, rad);
+  
+  float angle=TWO_PI/(float)numPoints;
+  for(int i=0;i<numPoints;i++)
+  {
+    addPointAt(cursorX + rad*sin(angle*i), cursorY + rad*cos(angle*i));
+  }
+}
+void clearScreen() {
+  background(bgColor);
+  points.clear();
 }
 void keyPressed() {
   switch(key) {
     case'c':
     // Clear the screen
-      background(bgColor);
+      clearScreen();
       break;
     case '-':
       zoomSpeed -= 0.002;
@@ -128,31 +186,19 @@ void keyPressed() {
       break;
     // horizontal
     case '1':
-      moveTargetX(1);
+      dropCursor(1);
       break;
     case '2':
-      moveTargetX(2);
+      dropCursor(2);
       break;
     case '3':
-      moveTargetX(3);
+      dropCursor(3);
       break;
     case '4':
-      moveTargetX(4);
+      dropCursor(4);
       break;
     case '5':
-      moveTargetX(5);
-      break;
-    case '6':
-      moveTargetX(6);
-      break;
-    case '7':
-      moveTargetX(7);
-      break;
-    case '8':
-      moveTargetX(8);
-      break;
-    case '9':
-      moveTargetX(9);
+      dropCursor(5);
       break;
     // vertical
     case 'q':
