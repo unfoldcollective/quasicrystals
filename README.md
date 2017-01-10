@@ -11,12 +11,7 @@ Developed as a responsive projection in collaboration with theatre group Divadlo
 
 Currently the horizontal controls are mapped to:
 ```
-1,2,3,4,5,6,7,8,9 (left to right)
-```
-
-and the vertical controls to:
-```
-q,a (top, bottom)
+1,2,3,4,5 (left to right)
 ```
 
 ### Camera movement
@@ -31,6 +26,9 @@ move camera up, down, left and right with:
 ↑,↓,←,→
 ```
 
+### Clear screen
+
+press: `c`
 
 ## Credits
 
