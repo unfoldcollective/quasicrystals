@@ -25,6 +25,7 @@ float noiseScale = 1;
 float noiseMultiplier = 10;
 Boolean shouldDraw = false;
 float areaWidth = 250;
+Boolean[] lastTouches = new Boolean[5]; 
 
 void setup()
 {
@@ -40,6 +41,11 @@ void setup()
   targetY = height * 0.1;
   cursorX = width * 0.5;
   cursorY = height * 0.9;
+  
+  // init lastTouches array
+  for (int i = 0; i < lastTouches.length; i++) {
+    lastTouches[i] = false;
+  }
 }
 void draw()
 {
@@ -155,6 +161,16 @@ void dropCursor(float n) {
   targetY += noise.y;
   drawPointsAroundCursor(8, 20);
 }
+void dropCursorOnce(int n){
+  int index = n - 1;
+  if(!lastTouches[index]){
+    for (int i = 0; i < lastTouches.length; i++) {
+      lastTouches[i] = false;
+    }
+    lastTouches[index] = true;
+    dropCursor(index);
+  }
+}
 void drawPointsAroundCursor(int numPoints, float rad) {
   ellipseMode(RADIUS);
   ellipse(cursorX, cursorY, rad, rad);
@@ -191,19 +207,19 @@ void keyPressed() {
       break;
     // horizontal
     case '1':
-      dropCursor(1);
+      dropCursorOnce(1);
       break;
     case '2':
-      dropCursor(2);
+      dropCursorOnce(2);
       break;
     case '3':
-      dropCursor(3);
+      dropCursorOnce(3);
       break;
     case '4':
-      dropCursor(4);
+      dropCursorOnce(4);
       break;
     case '5':
-      dropCursor(5);
+      dropCursorOnce(5);
       break;
     // vertical
     //case 'q':
