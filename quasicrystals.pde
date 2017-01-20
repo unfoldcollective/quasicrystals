@@ -18,6 +18,8 @@ ArrayList<PVector> points = new ArrayList();
 
 int NUM_TOUCH_POINTS_X = 5;
 int NUM_TOUCH_POINTS_Y = 2;
+int NUM_POINTS_AROUND_CURSOR = 8;
+int RADIUS_AROUND_CURSOR = 20;
 float targetX, targetY, cursorX, cursorY;
 float easing = 0.02;
 float dThreshold = 5;
@@ -159,7 +161,7 @@ void dropCursor(float n) {
   PVector noise = getDisplacementNoise(10);
   targetX += noise.x;
   targetY += noise.y;
-  drawPointsAroundCursor(8, 20);
+  drawPointsAroundCursor(NUM_POINTS_AROUND_CURSOR, RADIUS_AROUND_CURSOR);
 }
 void dropCursorOnce(int n){
   int index = n - 1;
