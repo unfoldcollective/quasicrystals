@@ -80,7 +80,7 @@ void draw()
         }
       }
     }
-    if(closestPoint != null)
+    if(closestPoint != null && distanceToClosestPoint < (2*width) )
     {
       int colorIndex = Math.max(0, Math.round(map(distanceToClosestPoint, 25, 60, 0, 3)))%4;
       strokeWeight(Math.min(1, 10/distanceToClosestPoint));
