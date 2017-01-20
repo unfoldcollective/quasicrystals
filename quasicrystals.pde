@@ -18,6 +18,8 @@ ArrayList<PVector> points = new ArrayList();
 
 int NUM_TOUCH_POINTS_X = 5;
 int NUM_TOUCH_POINTS_Y = 2;
+int NUM_POINTS_AROUND_CURSOR = 8;
+int RADIUS_AROUND_CURSOR = 20;
 float targetX, targetY, cursorX, cursorY;
 float easing = 0.02;
 float dThreshold = 5;
@@ -60,6 +62,7 @@ void draw()
   
   int nPoints = points.size();
   noStroke();
+  fill(bgColor, 31);
   rect(0, 0, width, height); // Clear the screen but with some degree of transparency
   for(int i = 0; i < nPoints; i++)
   {
@@ -78,7 +81,7 @@ void draw()
         }
       }
     }
-    if(closestPoint != null)
+    if(closestPoint != null && distanceToClosestPoint < (2*width) )
     {
       int colorIndex = Math.max(0, Math.round(map(distanceToClosestPoint, 25, 60, 0, 3)))%4;
       strokeWeight(Math.min(1, 10/distanceToClosestPoint));
@@ -94,6 +97,14 @@ void draw()
       points.get(i).add(displacement);
     }
   }
+  drawFrame();
+}
+void drawFrame() {
+  fill(0);
+  noStroke();
+  rect(0,0, 0.5 * width - 0.5 * areaWidth, height);
+  rect(0.5 * width + 0.5 * areaWidth,0, width, height);
+  noFill();
 }
 PVector getDisplacementNoise(float noiseScalar) {
   PVector noise = new PVector();
@@ -152,14 +163,14 @@ void moveCursorRatioY(float ratio) {
 }
 void dropCursor(float n) {
   shouldDraw = true;
-  moveCursorRatioX(n/(NUM_TOUCH_POINTS_X+1));
+  moveCursorRatioX((n+1)/(NUM_TOUCH_POINTS_X+1));
   moveCursorRatioY(0.9);
-  moveTargetRatioX(n/(NUM_TOUCH_POINTS_X+1));
+  moveTargetRatioX((n+1)/(NUM_TOUCH_POINTS_X+1));
   // move target with noise
   PVector noise = getDisplacementNoise(10);
   targetX += noise.x;
   targetY += noise.y;
-  drawPointsAroundCursor(8, 20);
+  drawPointsAroundCursor(NUM_POINTS_AROUND_CURSOR, RADIUS_AROUND_CURSOR);
 }
 void dropCursorOnce(int n){
   int index = n - 1;
