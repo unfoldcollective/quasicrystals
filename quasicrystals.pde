@@ -62,6 +62,7 @@ void draw()
   
   int nPoints = points.size();
   noStroke();
+  fill(bgColor, 31);
   rect(0, 0, width, height); // Clear the screen but with some degree of transparency
   for(int i = 0; i < nPoints; i++)
   {
@@ -96,6 +97,14 @@ void draw()
       points.get(i).add(displacement);
     }
   }
+  drawFrame();
+}
+void drawFrame() {
+  fill(0);
+  noStroke();
+  rect(0,0, 0.5 * width - 0.5 * areaWidth, height);
+  rect(0.5 * width + 0.5 * areaWidth,0, width, height);
+  noFill();
 }
 PVector getDisplacementNoise(float noiseScalar) {
   PVector noise = new PVector();
