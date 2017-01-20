@@ -154,9 +154,9 @@ void moveCursorRatioY(float ratio) {
 }
 void dropCursor(float n) {
   shouldDraw = true;
-  moveCursorRatioX(n/(NUM_TOUCH_POINTS_X+1));
+  moveCursorRatioX((n+1)/(NUM_TOUCH_POINTS_X+1));
   moveCursorRatioY(0.9);
-  moveTargetRatioX(n/(NUM_TOUCH_POINTS_X+1));
+  moveTargetRatioX((n+1)/(NUM_TOUCH_POINTS_X+1));
   // move target with noise
   PVector noise = getDisplacementNoise(10);
   targetX += noise.x;
