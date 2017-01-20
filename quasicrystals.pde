@@ -24,14 +24,16 @@ float dThreshold = 5;
 float noiseScale = 1;
 float noiseMultiplier = 10;
 Boolean shouldDraw = false;
+float areaWidth = 250;
 
 void setup()
 {
-  //fullScreen();
-  size(450, 850);
+  // can only have one of these active
+  fullScreen();
+  //size(250, 850);
+  
   background(0);
   fill(bgColor, 31);
-  
   noCursor();
   
   targetX = width * 0.5;
@@ -118,6 +120,9 @@ void moveTargetX(float n) {
   float ratioX = n / maxScaleX;
   targetX = ratioX * width;
 }
+void moveTargetRatioX(float ratio) {
+  targetX = (0.5 * width - 0.5 * areaWidth) + ratio * areaWidth;
+}
 void moveTargetY(float n) {
   float maxScaleY = NUM_TOUCH_POINTS_Y + 1;
   float ratioY = n / maxScaleY;
@@ -129,7 +134,7 @@ void moveCursorX(float n) {
   cursorX = ratioX * width;
 }
 void moveCursorRatioX(float ratio) {
-  cursorX = ratio * width;
+  cursorX = (0.5 * width - 0.5 * areaWidth) + ratio * areaWidth;
 }
 void moveCursorY(float n) {
   float maxScaleY = NUM_TOUCH_POINTS_Y + 1;
@@ -143,7 +148,7 @@ void dropCursor(float n) {
   shouldDraw = true;
   moveCursorRatioX(n/(NUM_TOUCH_POINTS_X+1));
   moveCursorRatioY(0.9);
-  moveTargetX(n);
+  moveTargetRatioX(n/(NUM_TOUCH_POINTS_X+1));
   // move target with noise
   PVector noise = getDisplacementNoise(10);
   targetX += noise.x;
@@ -201,12 +206,12 @@ void keyPressed() {
       dropCursor(5);
       break;
     // vertical
-    case 'q':
-      moveTargetY(1);
-      break;
-    case 'a':
-      moveTargetY(2);
-      break;
+    //case 'q':
+    //  moveTargetY(1);
+    //  break;
+    //case 'a':
+    //  moveTargetY(2);
+    //  break;
   }
   switch(keyCode) {
     case UP:
