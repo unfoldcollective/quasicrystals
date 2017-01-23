@@ -8,6 +8,10 @@
   I draw a line from each point to its nearest neighbour. The colors come in cycles from the outside to the inside.
   You can press + and - to play with the zoom, and the arrows to move the viewpoint around. Space to stop moving the viewpoint. 's' to take a screenshot.
 */
+
+import controlP5.*;
+ControlP5 cp5;
+
 int maxPoints = 1000; // Maximum number of total points
 float speed = 0.008; // How fast they will move
 float zoomSpeed = 0;
@@ -16,18 +20,22 @@ color[] palette = {#FFFFFF, #FFFFFF, #FFFFFF, #FFFFFF};
 color bgColor = 0;
 ArrayList<PVector> points = new ArrayList();
 
-int NUM_TOUCH_POINTS_X = 5;
-int NUM_TOUCH_POINTS_Y = 2;
+float areaWidth = 250;
 int NUM_POINTS_AROUND_CURSOR = 8;
 int RADIUS_AROUND_CURSOR = 20;
-float targetX, targetY, cursorX, cursorY;
 float easing = 0.02;
+
+int NUM_TOUCH_POINTS_X = 5;
+int NUM_TOUCH_POINTS_Y = 2;
+
+float targetX, targetY, cursorX, cursorY;
 float dThreshold = 5;
 float noiseScale = 1;
 float noiseMultiplier = 10;
 Boolean shouldDraw = false;
-float areaWidth = 250;
-Boolean[] lastTouches = new Boolean[5]; 
+Boolean showControls = false;
+Boolean[] lastTouches = new Boolean[5];
+int ACCENT_COLOR = #CC1111; 
 
 void setup()
 {
@@ -35,7 +43,7 @@ void setup()
   fullScreen();
   //size(250, 850);
   
-  background(0);
+  background(bgColor);
   fill(bgColor, 31);
   noCursor();
   
@@ -48,6 +56,14 @@ void setup()
   for (int i = 0; i < lastTouches.length; i++) {
     lastTouches[i] = false;
   }
+  
+  cp5 = new ControlP5(this);
+  cp5.addSlider("areaWidth")
+     .setPosition(100,50)
+     .setRange(100,width)
+     ;
+  cp5.hide();
+  
 }
 void draw()
 {
@@ -56,11 +72,11 @@ void draw()
   float dy = targetY - cursorY;
   cursorY += dy * easing;
   
-  if (abs(dx) > dThreshold || abs(dy) > dThreshold){
+  int nPoints = points.size();
+  if (abs(dx) > dThreshold || abs(dy) > dThreshold && nPoints > 0){
     addPoint();
   }
   
-  int nPoints = points.size();
   noStroke();
   fill(bgColor, 31);
   rect(0, 0, width, height); // Clear the screen but with some degree of transparency
@@ -101,9 +117,13 @@ void draw()
 }
 void drawFrame() {
   fill(0);
-  noStroke();
-  rect(0,0, 0.5 * width - 0.5 * areaWidth, height);
-  rect(0.5 * width + 0.5 * areaWidth,0, width, height);
+  if(showControls){
+    stroke(ACCENT_COLOR);
+  } else {
+    noStroke();
+  }
+  rect(-1,-1, 0.5 * width - 0.5 * areaWidth, height+1);
+  rect(0.5 * width + 0.5 * areaWidth,-1, width, height+1);
   noFill();
 }
 PVector getDisplacementNoise(float noiseScalar) {
@@ -196,6 +216,17 @@ void clearScreen() {
   background(bgColor);
   points.clear();
 }
+void toggleEdit() {
+  if(cp5.isVisible()){
+    cp5.hide();
+    noCursor();
+    showControls = false;
+  } else {
+    cp5.show();
+    cursor(ARROW);
+    showControls = true;
+  }
+}
 void keyPressed() {
   switch(key) {
     case'c':
@@ -215,6 +246,9 @@ void keyPressed() {
       break;
     case 's':
       saveFrame();
+      break;
+    case 'e':
+      toggleEdit();
       break;
     // horizontal
     case '1':
