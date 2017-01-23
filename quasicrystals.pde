@@ -56,11 +56,11 @@ void draw()
   float dy = targetY - cursorY;
   cursorY += dy * easing;
   
-  if (abs(dx) > dThreshold || abs(dy) > dThreshold){
+  int nPoints = points.size();
+  if (abs(dx) > dThreshold || abs(dy) > dThreshold && nPoints > 0){
     addPoint();
   }
   
-  int nPoints = points.size();
   noStroke();
   fill(bgColor, 31);
   rect(0, 0, width, height); // Clear the screen but with some degree of transparency
